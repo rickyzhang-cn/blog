@@ -1,0 +1,16 @@
+{{template "header"}}
+
+<div class="container">
+    <div class="row row-offcanvas row-offcanvas-right">
+        <div class="col-sm-9">{{.Title}}
+        {{with .Posts}}
+        {{range .}}
+        <h2><a href="/post/{{.FileName}}">{{.Title}}</a></h2>
+        <div class="meta">{{.Date}}</div>
+        {{end}}
+        {{end}}
+        </div>
+        {{template "sidebar" .}}
+    </div>
+</div>
+{{template  "footer"}}

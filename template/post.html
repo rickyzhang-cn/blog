@@ -1,0 +1,14 @@
+{{template "header"}}
+
+<div class="container">
+    <div class="row row-offcanvas row-offcanvas-right">
+        <div class="col-sm-9">
+            <h1>{{.Title}}</h1>
+            <pre>{{.Date}}</pre>
+            {{.Content}}
+        </div>
+        {{template "sidebar"}}
+    </div>
+</div>
+
+{{template  "footer"}}

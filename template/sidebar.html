@@ -1,0 +1,16 @@
+{{define "sidebar"}}
+<div class="col-sm-3" id="sidebar" role="navigation">
+    <div class="well sidebar-nav">
+        <h2 id="nav-pills">Category</h2>
+        <ul class="nav nav-pills nav-stacked">
+            {{range .Categories}}
+            <li><a href="/category/{{.}}">{{.}}</a></li>
+            {{end}}
+        </ul>
+        <h2 id="nav-pills">Tags</h2>
+        {{range .Tags}}
+        <a href="/tags/{{.}}" class="btn btn-info btn-xs">{{.}}</a>
+        {{end}}
+    </div>
+</div>
+{{end}}
