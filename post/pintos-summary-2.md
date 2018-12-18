@@ -101,7 +101,7 @@ void sema_up (struct semaphore *sema)
   	struct list_elem *top_elem=list_pop_front(&amp;sema-&gt;waiters);
 	struct thread *t=list_entry(top_elem,struct thread,elem);
 
-	if(sema-&gt;containing_lock!=NULL)
+	if(sema->containing_lock!=NULL)
 	{
 		struct thread *lock_holder=(sema-&gt;containing_lock)-&gt;holder;
 		//struct thread *lock_holder=thread_current();
@@ -110,13 +110,13 @@ void sema_up (struct semaphore *sema)
 
 		//msg("in sema_up,lock_holder,name=%s priority=%d\n",lock_holder-&gt;name,lock_holder-&gt;priority);
 
-		t-&gt;blocking_lock=NULL;
-		sema-&gt;containing_lock=NULL;
+		t->blocking_lock=NULL;
+		sema->containing_lock=NULL;
 	}
 
 	thread_unblock(t);
   }
-  sema-&gt;value++;
+  sema->value++;
   intr_set_level (old_level);
 
   if(check_preemption())
@@ -128,15 +128,15 @@ void sema_up (struct semaphore *sema)
 
 void thread_set_true_priority(struct thread *t)
 {
-	t-&gt;under_donation=false;
+	t->under_donation=false;
 
 	struct list_elem *e;
 	struct list_elem *te;
 	struct thread *top_thread;
 	struct lock *l;
-	int max_priority=t-&gt;actual_priority;
+	int max_priority=t->actual_priority;
 
-	if(list_size(&amp;(t-&gt;locks_list)) &gt; 0)
+	if(list_size(&amp;(t->locks_list)) > 0)
 	{
 		for(e=list_begin(&amp;(t-&gt;locks_list));e!=list_end(&amp;(t-&gt;locks_list));e=list_next(e))
 		{

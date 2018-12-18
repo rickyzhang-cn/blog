@@ -139,10 +139,10 @@ User Program在运行前需要建立运行时环境，代码段、数据段、bs
 ````
 //这里用代码混合文字来说明，能说明问题就好
 t=thread_current();
-t-&gt;pagedir 0xc010e000
-t-&gt;pagedir为用palloc申请到的一个page，此时page中只有一个项不为0，也就是内核空间的信息
+t->pagedir 0xc010e000
+t->pagedir为用palloc申请到的一个page，此时page中只有一个项不为0，也就是内核空间的信息
 
-load()例程中的load_segment()会给t-&gt;pagedir添加页表项记录，或许不止一项
+load()例程中的load_segment()会给t->pagedir添加页表项记录，或许不止一项
 static bool install_page(
 void *upage, //0x08048000
 void *kpage, //0xc0281000
