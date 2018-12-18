@@ -24,11 +24,11 @@ type Index struct {
 }
 
 type Post struct {
-	Title    string   `json:"title"`
-	FileName string   `json:"file_name"`
-	Date     string   `json:"date"`
-	Category string   `json:"category"`
-	Tags     []string `json:"tags"`
+	Title      string   `json:"title"`
+	FileName   string   `json:"file_name"`
+	Date       string   `json:"date"`
+	Categories []string `json:"categories"`
+	Tags       []string `json:"tags"`
 }
 
 func ParseIndex() gin.HandlerFunc {
@@ -46,8 +46,10 @@ func ParseIndex() gin.HandlerFunc {
 		categoryM := make(map[string][]*Post, 16)
 		tagM := make(map[string][]*Post, 16)
 		for _, post := range info.Posts {
-			cate, tags := post.Category, post.Tags
-			categoryM[cate] = append(categoryM[cate], post)
+			cates, tags := post.Categories, post.Tags
+			for _, cate := range cates {
+				categoryM[cate] = append(categoryM[cate], post)
+			}
 			for _, tag := range tags {
 				tagM[tag] = append(tagM[tag], post)
 			}

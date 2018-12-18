@@ -1,8 +1,8 @@
 <!---
-title: golang http和tcp的热更新
-date: 2018-10-15 21:08
-category: 系统编程
-tags: golang, tcp
+title:: golang http和tcp的热更新
+date:: 2018-10-15 21:08
+categories:: 系统与网络, 编程语言
+tags:: golang, tcp, http
 -->
 
 前一段时间将公司贪吃蛇大作战游戏内的后台代码进行了热更新改造。改造的后台代码主要是提供rpc service，主要特点其是基于tcp的长连接、有状态服务。这和http(非http2)这种提供短连接的api服务不太一样，针对http，go中有facebook出品的grace可以解决，我们在生产环境api server使用的就是grace来进行热更。
