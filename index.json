@@ -1,5 +1,5 @@
 {
   "posts":[
-    {"title": "golang http和tcp的热更新", "file_name": "go-http-tcp-hot-upgrade.md", "date": "2018-10-15 21:08", "category": "系统编程", "tags": ["golang", "tcp"]}
+    {"title": "golang http和tcp的热更新", "file_name": "go-http-tcp-hot-upgrade.md", "date": "2018-10-15", "category": "系统编程", "tags": ["golang", "tcp"]}
   ]
 }

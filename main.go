@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	PORT = 1234
+	PORT = 80
 )
 
 func initRouter() *gin.Engine {
@@ -25,9 +25,9 @@ func initRouter() *gin.Engine {
 	router.GET("/", service.Home)
 	router.GET("/about", service.About)
 
-	router.GET("/post/:name", service.GetPost)
 	router.GET("/category/:name", service.GetCategory)
-	router.GET("/tag/:name")
+	router.GET("/tag/:name", service.GetTag)
+	router.GET("/post/:name", service.GetPost)
 	return router
 }
 
