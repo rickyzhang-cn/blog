@@ -22,6 +22,7 @@ func initRouter() *gin.Engine {
 	router.Use(gin.Recovery())
 	router.Use(service.ParseIndex())
 	router.LoadHTMLGlob("./template/*.html")
+	router.Static("/img", "./img")
 	router.GET("/", service.Home)
 	router.GET("/about", service.About)
 
