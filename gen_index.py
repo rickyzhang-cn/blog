@@ -41,6 +41,9 @@ for md in md_files:
 metas = sorted(metas, key = lambda k: k['date'])
 metas.reverse()
 
+for meta in metas:
+    meta['date'] = re.findall(r'\d{4}-\d{2}-\d{2}', meta['date'])[0]
+
 with open(index_file, 'r+') as f:
     data = json.load(f)
     data['posts'] = metas

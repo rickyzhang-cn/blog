@@ -3,7 +3,7 @@
     {
       "file_name": "go-http-tcp-hot-upgrade.md",
       "title": "golang http\u548ctcp\u7684\u70ed\u66f4\u65b0",
-      "date": "2018-10-15 21:08",
+      "date": "2018-10-15",
       "categories": [
         "\u7cfb\u7edf\u4e0e\u7f51\u7edc",
         "\u7f16\u7a0b\u8bed\u8a00"
@@ -17,7 +17,7 @@
     {
       "file_name": "dijkstra-algorithm.md",
       "title": "Dijkstra\u7b97\u6cd5",
-      "date": "2016-03-08 21:08",
+      "date": "2016-03-08",
       "categories": [
         "\u7b97\u6cd5"
       ],
@@ -29,7 +29,7 @@
     {
       "file_name": "minimum-spanning-tree.md",
       "title": "\u6700\u5c0f\u751f\u6210\u6811",
-      "date": "2016-03-04 21:08",
+      "date": "2016-03-04",
       "categories": [
         "\u7b97\u6cd5"
       ],
@@ -41,7 +41,7 @@
     {
       "file_name": "graph-dfs-gfs.md",
       "title": "\u56fe\u7684DFS\u548cGFS",
-      "date": "2016-03-02 21:08",
+      "date": "2016-03-02",
       "categories": [
         "\u7b97\u6cd5"
       ],
@@ -53,7 +53,7 @@
     {
       "file_name": "red-black-tree.md",
       "title": "\u7ea2\u9ed1\u6811",
-      "date": "2016-02-29 21:08",
+      "date": "2016-02-29",
       "categories": [
         "\u7f16\u7a0b\u8bed\u8a00",
         "\u7b97\u6cd5"
@@ -67,7 +67,7 @@
     {
       "file_name": "program-pearls-note.md",
       "title": "\u7f16\u7a0b\u73e0\u7391\u8bfb\u4e66\u7b14\u8bb0",
-      "date": "2016-02-28 21:08",
+      "date": "2016-02-28",
       "categories": [
         "\u7b97\u6cd5"
       ],
@@ -78,98 +78,98 @@
     {
       "file_name": "pintos-fs-2.md",
       "title": "Pintos\u6587\u4ef6\u7cfb\u7edf\u521d\u63a22",
-      "date": "2015-04-12 21:08",
+      "date": "2015-04-12",
       "categories": [
         "\u7cfb\u7edf\u4e0e\u7f51\u7edc"
       ],
       "tags": [
         "c",
         "pintos",
-        "thread"
+        "fs"
       ]
     },
     {
       "file_name": "pintos-fs-1.md",
       "title": "Pintos\u6587\u4ef6\u7cfb\u7edf\u521d\u63a21",
-      "date": "2015-04-11 21:08",
+      "date": "2015-04-11",
       "categories": [
         "\u7cfb\u7edf\u4e0e\u7f51\u7edc"
       ],
       "tags": [
         "c",
         "pintos",
-        "thread"
+        "fs"
       ]
     },
     {
       "file_name": "pintos-summary-4.md",
       "title": "Pintos\u5b9e\u9a8c\u9636\u6bb5\u603b\u7ed34",
-      "date": "2015-03-24 21:08",
+      "date": "2015-03-24",
       "categories": [
         "\u7cfb\u7edf\u4e0e\u7f51\u7edc"
       ],
       "tags": [
         "c",
         "pintos",
-        "thread"
+        "memory"
       ]
     },
     {
       "file_name": "pintos-vm.md",
       "title": "Pintos\u865a\u62df\u5185\u5b58\u673a\u5236\u521d\u63a2",
-      "date": "2015-02-05 21:08",
+      "date": "2015-02-05",
       "categories": [
         "\u7cfb\u7edf\u4e0e\u7f51\u7edc"
       ],
       "tags": [
         "c",
         "pintos",
-        "thread"
+        "memory"
       ]
     },
     {
       "file_name": "pintos-summary-3.md",
       "title": "Pintos\u5b9e\u9a8c\u9636\u6bb5\u603b\u7ed33",
-      "date": "2015-02-02 21:08",
+      "date": "2015-02-02",
       "categories": [
         "\u7cfb\u7edf\u4e0e\u7f51\u7edc"
       ],
       "tags": [
         "c",
         "pintos",
-        "thread"
+        "schedule"
       ]
     },
     {
       "file_name": "pintos-user-program.md",
       "title": "Pintos\u4e2dUser Program\u8fd0\u884c\u673a\u5236\u7684\u63a2\u7d22",
-      "date": "2015-01-23 21:08",
+      "date": "2015-01-23",
       "categories": [
         "\u7cfb\u7edf\u4e0e\u7f51\u7edc"
       ],
       "tags": [
         "c",
-        "pintos",
-        "thread"
+        "pintos"
       ]
     },
     {
       "file_name": "pintos-summary-2.md",
       "title": "Pintos\u5b9e\u9a8c\u9636\u6bb5\u603b\u7ed32",
-      "date": "2015-01-12 21:08",
+      "date": "2015-01-12",
       "categories": [
         "\u7cfb\u7edf\u4e0e\u7f51\u7edc"
       ],
       "tags": [
         "c",
         "pintos",
-        "thread"
+        "thread",
+        "schedule"
       ]
     },
     {
       "file_name": "pintos-summary-1.md",
       "title": "Pintos\u5b9e\u9a8c\u9636\u6bb5\u603b\u7ed31",
-      "date": "2014-12-23 21:08",
+      "date": "2014-12-23",
       "categories": [
         "\u7cfb\u7edf\u4e0e\u7f51\u7edc"
       ],
@@ -182,7 +182,7 @@
     {
       "file_name": "pintos-setup.md",
       "title": "Pintos\u5b9e\u9a8c\u73af\u5883\u642d\u5efa",
-      "date": "2014-11-26 21:08",
+      "date": "2014-11-26",
       "categories": [
         "\u7cfb\u7edf\u4e0e\u7f51\u7edc"
       ],
@@ -195,7 +195,7 @@
     {
       "file_name": "2013-review.md",
       "title": "\u6211\u76842013",
-      "date": "2014-01-02 21:08",
+      "date": "2014-01-02",
       "categories": [
         "\u751f\u6d3b\u8bfb\u4e66\u65b0\u77e5"
       ],
