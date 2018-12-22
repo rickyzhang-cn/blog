@@ -13,50 +13,7 @@ tags:: c, pintos, thread
 
 我选择32bit的Ubuntu上使用Bochs来运行调试Pintos，主要是因为我使用过Bochs，而且觉得对于这种简单OS的调试还是很适合的。
 
-在Pintos的源码包中的misc/目录中有一个安装带调试功能bochs的脚本bochs-2.2.6-build.sh，可以看一看，就用这个脚本进行安装：
-````
-#! /bin/sh -e
-
-if test -z "$SRCDIR" || test -z "$PINTOSDIR" || test -z "$DSTDIR"; then
-    echo "usage: env SRCDIR=&lt;srcdir&gt; PINTOSDIR=&lt;srcdir&gt; DSTDIR=&lt;dstdir&gt; sh $0"
-    echo "  where &lt;srcdir&gt; contains bochs-2.2.6.tar.gz"
-    echo "    and &lt;pintosdir&gt; is the root of the pintos source tree"
-    echo "    and &lt;dstdir&gt; is the installation prefix (e.g. /usr/local)"
-    exit 1
-fi
-
-cd /tmp
-mkdir $$
-cd $$
-mkdir bochs-2.2.6
-tar xzf $SRCDIR/bochs-2.2.6.tar.gz
-cd bochs-2.2.6
-cat $PINTOSDIR/src/misc/bochs-2.2.6-ms-extensions.patch | patch -p1
-cat $PINTOSDIR/src/misc/bochs-2.2.6-big-endian.patch | patch -p1
-cat $PINTOSDIR/src/misc/bochs-2.2.6-jitter.patch | patch -p1
-cat $PINTOSDIR/src/misc/bochs-2.2.6-triple-fault.patch | patch -p1
-cat $PINTOSDIR/src/misc/bochs-2.2.6-solaris-tty.patch | patch -p1
-cat $PINTOSDIR/src/misc/bochs-2.2.6-page-fault-segv.patch | patch -p1
-cat $PINTOSDIR/src/misc/bochs-2.2.6-paranoia.patch | patch -p1
-cat $PINTOSDIR/src/misc/bochs-2.2.6-gdbstub-ENN.patch | patch -p1
-cat $PINTOSDIR/src/misc/bochs-2.2.6-namespace.patch | patch -p1
-if test "`uname -s`" = "SunOS"; then
-    cat $PINTOSDIR/src/misc/bochs-2.2.6-solaris-link.patch | patch -p1
-fi
-CFGOPTS="--with-x --with-x11 --with-term --with-nogui --prefix=$DSTDIR --enable-cpu-level=6"
-mkdir plain &amp;&amp;
-        cd plain &amp;&amp;
-        ../configure $CFGOPTS --enable-gdb-stub &amp;&amp;
-        make &amp;&amp;
-        make install &amp;&amp;
-        cd ..
-mkdir with-dbg &amp;&amp;
-        cd with-dbg &amp;&amp;
-        ../configure --enable-debugger $CFGOPTS &amp;&amp;
-        make &amp;&amp;
-        cp bochs $DSTDIR/bin/bochs-dbg &amp;&amp;
-        cd ..
-````
+在Pintos的源码包中的misc/目录中有一个安装带调试功能bochs的脚本bochs-2.2.6-build.sh，可以自己看一看，就用这个脚本进行安装就可以
 
 脚本中使用的bochs源码版本是2.2.6，你需要去下载一个2.2.6的bochs源码包。然后运行下面的命令：
 ````
@@ -68,9 +25,9 @@ env SRCDIR=/path/to/bochs-2.2.6.tar.gz PINTOSDIR=/path/to/pintos DSTDIR=/usr/loc
 #将pintos相关的一些辅助工具放入系统$PATH变量中
 cd /path/to/root/of/pintos/src/utils
 sudo make
-sudo cp backtrace pintos pintos-gdb pintos-mkdisk Pintos.pm squish-pty /usr/local/bin</pre>
+sudo cp backtrace pintos pintos-gdb pintos-mkdisk Pintos.pm squish-pty /usr/local/bin
 ````
 
-还有一个就是需要修改pintos-gdb这个perl脚本中GDBMACROS变量为源码包util/目录中gdb-macros文件的位置。<tt></tt>
+还有一个就是需要修改pintos-gdb这个perl脚本中GDBMACROS变量为源码包util/目录中gdb-macros文件的位置。
 
 Pintos的基本环境基本就搭建好了，下面就是使用和添加一些代码调试了。

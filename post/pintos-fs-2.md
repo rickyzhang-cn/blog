@@ -2,36 +2,38 @@
 title:: Pintos文件系统初探2
 date:: 2015-04-12 21:08
 categories:: 系统与网络
-tags:: c, pintos, thread
+tags:: c, pintos, fs
 -->
 
 在ATA磁盘和文件系统均初始化完成后，Pintos就可以在磁盘上进行I/O操作了。
-<h2>inode.c</h2>
-<pre class="brush:cpp">/* In-memory inode. */
+## `inode.c`
+````
+/* In-memory inode. */
 struct inode 
-  {
+{
     struct list_elem elem;              /* Element in inode list. */
     block_sector_t sector;              /* Sector number of disk location. */
     int open_cnt;                       /* Number of openers. */
     bool removed;                       /* True if deleted, false otherwise. */
-    int deny_write_cnt;                 /* 0: writes ok, &gt;0: deny writes. */
+    int deny_write_cnt;                 /* 0: writes ok, >;0: deny writes. */
     struct inode_disk data;             /* Inode content. */
-  };
+};
 
 /* On-disk inode.
    Must be exactly BLOCK_SECTOR_SIZE bytes long. */
 struct inode_disk
-  {
+{
     block_sector_t start;               /* First data sector. */
     off_t length;                       /* File size in bytes. */
     unsigned magic;                     /* Magic number. */
     uint32_t unused[125];               /* Not used. */
-  };
-</pre>
-其中inode是In-memory inode，inode_disk是On-disk inode。inode_disk这个结构体正好是一个sector 512bytes的大小，最终会写到磁盘上的，inode_disk上记录的是一个磁盘文件的sector起点start和文件长度length。
+};
+````
+其中inode是In-memory inode，`inode_disk`是On-disk inode。`inode_disk`这个结构体正好是一个sector 512bytes的大小，最终会写到磁盘上的，`inode_disk`上记录的是一个磁盘文件的sector起点start和文件长度length。
 
-Pintos的原始文件系统中只有根目录，没有多级目录。Root Directory也是一个inode_disk，Root Directory占用一个sector，里面存储的是文件的entry，记录文件inode_disk所在的sector，然后改sector记录的就是文件所在的sector起点start和占用的连续的sector个数length。
-<pre>/* Initializes an inode with LENGTH bytes of data and
+Pintos的原始文件系统中只有根目录，没有多级目录。Root Directory也是一个`inode_disk`，Root Directory占用一个sector，里面存储的是文件的entry，记录文件`inode_disk`所在的sector，然后改sector记录的就是文件所在的sector起点start和占用的连续的sector个数length。
+````
+/* Initializes an inode with LENGTH bytes of data and
  writes the new inode to sector SECTOR on the file system
  device.
  Returns true if successful.
@@ -59,21 +61,24 @@ off_t inode_read_at (struct inode *inode, void *buffer_, off_t size, off_t offse
  (Normally a write at end of file would extend the inode, but
  growth is not yet implemented.) */
 off_t inode_write_at (struct inode *inode, const void *buffer_, off_t size,off_t offset);
-这两个例程是file_read()和file_write()调用的读写例程，其中的offset值时文件的offset</pre>
-<h2>file.c</h2>
-<pre class="brush:cpp">/* An open file. */
+这两个例程是file_read()和file_write()调用的读写例程，其中的offset值时文件的offset
+````
+## `file.c`
+````
+/* An open file. */
 struct file 
-  {
+{
     struct inode *inode;        /* File's inode. */
     off_t pos;                  /* Current position. */
     bool deny_write;            /* Has file_deny_write() been called? */
 
     int fd;
     struct list_elem open_file_elem;
-  };
-</pre>
+};
+````
 file结构体构建在inode之上，添加了一些字段支持file的一些操作。
-<pre>/* Opens a file for the given INODE, of which it takes ownership,
+````
+/* Opens a file for the given INODE, of which it takes ownership,
  and returns the new file. Returns a null pointer if an
  allocation fails or if INODE is null. */
 struct file * file_open (struct inode *inode);
@@ -88,9 +93,9 @@ file_open()被上层的filesys_open()例程调用，filesys_open()传入参数�
 off_t
 file_read (struct file *file, void *buffer, off_t size) 
 {
- off_t bytes_read = inode_read_at (file-&gt;inode, buffer, size, file-&gt;pos);
- file-&gt;pos += bytes_read;
- return bytes_read;
+    off_t bytes_read = inode_read_at (file->;inode, buffer, size, file->;pos);
+    file->;pos += bytes_read;
+    return bytes_read;
 }
 /* Writes SIZE bytes from BUFFER into FILE,
  starting at the file's current position.
@@ -102,22 +107,20 @@ file_read (struct file *file, void *buffer, off_t size)
 off_t
 file_write (struct file *file, const void *buffer, off_t size) 
 {
- off_t bytes_written = inode_write_at (file-&gt;inode, buffer, size, file-&gt;pos);
- file-&gt;pos += bytes_written;
- return bytes_written;
+    off_t bytes_written = inode_write_at (file->;inode, buffer, size, file->;pos);
+    file->;pos += bytes_written;
+    return bytes_written;
 }
-file的读写例程，系统调用中文件的读写就是调用这里的读写例程</pre>
-<h2>filesys.c</h2>
-一直觉得filesys.c这个文件中的例程比较杂乱，有系统初始化时调用的filesys_init()例程，也有被系统调用机制中调用的filesys_create/open/remove例程。
+file的读写例程，系统调用中文件的读写就是调用这里的读写例程
+````
+## `filesys.c`
+一直觉得filesys.c这个文件中的例程比较杂乱，有系统初始化时调用的`filesys_init()`例程，也有被系统调用机制中调用的`filesys_create/open/remove`例程。
 
-这个文件中的例程基本上是directory.c最大的使用者，因为filesys.c中的函数创建文件，打开文件，删除文件，这个会经常操作Root Directory。
-<h2>fsutil.c</h2>
-fsutil.c相当于是应用层的一些例程，这些例程最主要在系统初始化有使用，将scratch磁盘上打包文件解压出来，将文件写入到文件系统上，准备好用户的测试程序。
+这个文件中的例程基本上是`directory.c`最大的使用者，因为`filesys.c`中的函数创建文件，打开文件，删除文件，这个会经常操作Root Directory。
+## `fsutil.c`
+`fsutil.c`相当于是应用层的一些例程，这些例程最主要在系统初始化有使用，将scratch磁盘上打包文件解压出来，将文件写入到文件系统上，准备好用户的测试程序。
 
 <a href="http://www.rickyzhang.me/blog/wp-content/uploads/2015/04/filesys_used.jpg"><img class="alignnone size-medium wp-image-748" src="http://www.rickyzhang.me/blog/wp-content/uploads/2015/04/filesys_used-300x185.jpg" alt="filesys_used" width="300" height="185" /></a>
 
-scratch disk上的文件是由perl脚本写入进去的，是一个压缩文件，系统在启动后会通过fsutil_extract()例程将文件解压然后写入到filesystem disk上去。
+scratch disk上的文件是由perl脚本写入进去的，是一个压缩文件，系统在启动后会通过`fsutil_extract()`例程将文件解压然后写入到filesystem disk上去。
 
-&nbsp;
-
-&nbsp;
