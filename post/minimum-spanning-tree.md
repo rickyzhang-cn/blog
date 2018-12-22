@@ -18,7 +18,8 @@ Kruskal算法的正确性可以使用CLRS中CH23的推论23.2证明。
 Kruskal算法文字描述很简单，代码的话，Kruskal算法使用UNION过程来对两棵树进行合并。
 <h4>Prim算法</h4>
 在Prim算法中，集合A则是一颗树，每次加入到A中的安全边永远是连接A和A之外某个结点的边中权重最小的边。
-<pre class="brush:plain">MST-PRIM(G,w,r)
+```
+MST-PRIM(G,w,r)
 	for each u∈G.V
 		u.key=∞
 		u.π=NIL
@@ -27,16 +28,17 @@ Kruskal算法文字描述很简单，代码的话，Kruskal算法使用UNION过�
 	while Q≠∅
 		u=EXTRACT-MIN(Q)
 		for each v∈G.Adj[u]
-		if v and w(u,v)&lt;v.key
+		if v and w(u,v)<v.key
 			v.π=u
-			v.key=w(u,v)</pre>
+			v.key=w(u,v)
+```
 算法中的while的循环不等式为：
 
-1.A={(v, v.π): v∈V-{r}-Q}
+1.`A={(v, v.π): v∈V-{r}-Q}`
 
 2.已经加入到最小生成树的结点为集合V-Q
 
-3.对于所有的结点v∈Q，如果v.π≠NIL，则v.key&lt;∞并且v.key是连接点v和最小生成树中某个结点的轻量级边(v, v.π)的权重
+3.对于所有的结点v∈Q，如果`v.π≠NIL`，则`v.key<∞`并且`v.key`是连接点v和最小生成树中某个结点的轻量级边(v, v.π)的权重
 
 证明了循环不等式结合CLRS中的推论23.2可以证明Prim算法的正确性。
 

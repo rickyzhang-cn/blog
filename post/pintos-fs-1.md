@@ -6,7 +6,7 @@ tags:: c, pintos, fs
 -->
 ## `ide.c`和`block.c`
 这两个文件是作为文件载体的硬件的设备驱动程序，是文件系统的硬件级底层支持。
-````
+```
 /* Initialize the disk subsystem and detect disks. */
 void
 ide_init (void) 
@@ -64,10 +64,10 @@ ide_init (void)
                 identify_ata_device (&c->devices[dev_no]);
     }
 }
-````
+```
 系统初始化时会调用ide_init()，该例程初始化disk subsystem并且探测disk的存在。最重要的是通过intr_register_ext()为每一个通道上的ide设备注册中断服务程序，然后identify_ata_device()例程中会通过block_register()例程注册block device。
 
-````
+```
 /* Registers a new block device with the given NAME.  If
    EXTRA_INFO is non-null, it is printed as part of a user
    message.  The block device's SIZE in sectors and its TYPE must
@@ -96,9 +96,9 @@ scratch: using hda3
 swap: using hda4
 /* Figure out what block devices to cast in the various Pintos roles. */
 static void locate_block_devices (void);
-````
+```
 有个问题需要阐述一下，就是关于磁盘读写例程的问题：
-````
+```
 首先看一看注册ATA磁盘中的传入参数：
 static struct block_operations ide_operations =
 {
@@ -146,9 +146,9 @@ ide_write (void *d_, block_sector_t sec_no, const void *buffer)
 }
 这里使用了一些同步机制，保证一致性，这个没有仔细去思考，也不需要多关注
 真正实施读写的是input_sector()和out_sector()这两个函数，同时都是以sector为单位读写的
-````
+```
 上面是硬件层的读写例程，真正提供给文件系统调用的例程都在block.c中。
-````
+```
 /* Reads sector SECTOR from BLOCK into BUFFER, which must
    have room for BLOCK_SECTOR_SIZE bytes.
    Internally synchronizes accesses to block devices, so external
@@ -176,10 +176,10 @@ block_write (struct block *block, block_sector_t sector, const void *buffer)
 }
 block的读写例程最终还是通过调用注册的ide_read()和ide_write()来完成
 通过block_sector_t这个uint32_t类型来表示哪一个sector被操作
-````
+```
 ## `filesys_init()`
 在ATA磁盘硬件初始化完成之后，进行文件系统的初始化，文件系统的初始化由filesys_init()完成。
-````
+```
 /* Initializes the file system module.
    If FORMAT is true, reformats the file system. */
 void
@@ -197,7 +197,7 @@ filesys_init (bool format)
 
     free_map_open ();
 }
-````
+```
 其中inode的初始化比较简单，就是初始化open_inodes这个链表。free_map的初始化是基于bitmap来进行的，通过bitmap来管理磁盘上sector的分配与释放。
 
 关于文件系统上的一些layour信息见下面这个图：

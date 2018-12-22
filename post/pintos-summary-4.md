@@ -13,7 +13,7 @@ tags:: c, pintos, memory
 + 在User Program的load过程中，仅仅是在User Program对应的thread结构体的spt链表中添加记录而已，并不实际load文件块到内存中，stack的大小不是固定的，可以随着以后的需要增长；
 + 将一块磁盘块设备作为内存页交换的SWAP分区，实现内存页的换入换出；
 + 实现MMAP和MUNMAP系统调用。
-````
+```
 struct frame_entry {
     void *frame;
     struct sup_page_entry *spte;
@@ -40,11 +40,11 @@ struct sup_page_entry {
 
     struct hash_elem elem;
 };
-````
+```
 这里最重要的就是上面的2个数据结构。其中`frame_entry`以链表结构组织在一起，系统中有一个全局变量`struct list frame_table`，记录系统中正在被使用的内存页的相关信息，这个结构体是为了实现页的换入换出的。`sup_page_entry`是以hash table组织在一起的，每个thread结构体中都一个`struct hash spt`哈希表，这个哈希表上记录的就是这个thread的地址空间信息，虚拟地址的大部分操作都和这个结构体有关。
 
 MMAP系统调用实质上也就是在thread的spt上添加文件和内存之间的映射信息，在移除的时候，看映射的页是否dirty，如果dirty，需要回写到磁盘上，否则直接移除MMAP的内存映射信息。用于SWAP交换空间的磁盘的管理和内存的管理类似，也是通过bitmap来实现的，页的换入换出操作从程序的地址空间的角度来看，其实和MMAP有些类似，也是内存和磁盘的映射，但是SWAP相当于一个内存页的临时存放的地方，在系统内存负载较大时，会频繁有页的换入换出操作。
-````
+```
 /* Page fault handler.  This is a skeleton that must be filled in
    to implement virtual memory.  Some solutions to project 2 may
    also require modifying this code.
@@ -118,10 +118,10 @@ page_fault (struct intr_frame *f)
     }
 #endif
 }
-````
+```
 这种情况下，系统中会经常出现page fault这个exception，所以我们要去修改`page_fault`这个函数，在出现缺页异常时，能够正确处理。`page_fault()`异常处理例程需要判断是属于哪一种情况，进行相应的处理。
 ## pt-grow-stk-sc调试记录
-````
+```
 void
 test_main (void)
 {
@@ -141,9 +141,9 @@ test_main (void)
 
     CHECK (!memcmp (sample, buf2 + 32768, slen), "compare written data against read data");
     close (handle);
-````
+```
 上面是一个测试例程，这个例程最主要的是为了测试thread的stack即使在系统调用中也能够正确扩展。下面我们来捕捉程序中的page_fault和write read系统调用的过程，以及一些记录信息。
-````
+```
 load()例程结束后：
 if_.eip=0x0804881c(program entry)
 if_.esp=0xc0000000
@@ -211,10 +211,10 @@ f->cs SEL_KCSEG
 
 这里其实也有一个问题，第7次page fault中write为False，user也为False，证明这个页不可写，还属于内核
 其实这不科学，但是能行就好
-````
+```
 从上面这个调试例子，可以看到至少程序的load和stack的扩展是可以正确工作的，struct thread中的spt哈希表记录地址空间也是可以正确工作，page_fault也是基本正确的。
 ## mmap-inherit调试记录
-````
+```
 /***********mmap-inherit.c***********************/
 void
 test_main (void)
@@ -247,9 +247,9 @@ test_main (void)
     memset ((char *) 0x54321000, 0, 4096);
     fail ("child can modify parent's memory mappings");
 }
-````
+```
 mmap-inherit测试例程为了测试子进程不继承父进程的mmap。父进程打开一个文件sample.txt，然后将这个文件 通过mmap映射到`0x54321000`这个地址上，然后创建一个子进程child-inherit，子进程去写父进程的那个`0x54321000`这个地 址，这个应该会失败，导致子进程产生异常退出，父进程最终退出。父子进程退出时，都会清除自己的`mmap_list`上的项。
-````
+```
 在SYS_MMAP处设置断点：
 fd:3 addr:0x54321000
 系统调用调用的是内核中的mmap()例程
@@ -271,5 +271,5 @@ load()是根据ELF文件格式导入，mmap()是直接将文件导入
 这里还有一个问题就是mmap对应的file到底怎么关闭
 file信息在struct thread的open_file_list上也有
 只能关闭一次，关闭两次会导致kernel panic，这里我选择仅仅在open_file_list上关闭
-````
+```
 上面的调试记录，以及实验结果也说明了MMAP系统调用是可以正确工作的。

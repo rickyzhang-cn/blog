@@ -6,7 +6,7 @@ tags:: c, pintos
 -->
 
 在Pintos中一个用户态的thread对应着一个内核态的thread，在Pintos中，这个特殊的thread的运行入口函数均是同一个函数，也就是`start_process()`，而且传递了一个参数给`start_process()`。这个过程由`process_execute()`执行。
-````
+```
 /* A thread function that loads a user process and starts it
    running. */
 static void
@@ -56,7 +56,7 @@ start_process (void *file_name_)
     asm volatile ("movl %0, %%esp; jmp intr_exit" : : "g" (&if_) : "memory");
     NOT_REACHED ();
 }
-````
+```
 上面是start_process()函数例程的源码。这个函数中完成的最主要的任务有：
 <ul>
 	<li>将ELF文件格式的可执行文件从磁盘上load到内存中，这个过程由`load()`完成</li>
@@ -72,15 +72,15 @@ start_process (void *file_name_)
 在`start_process()`中最重要的是最后一个inline assembly语句：`asm volatile ("movl %0, %%esp; jmp intr_exit" : : "g" (&if_) : "memory");`
 
 对于inline assembly，其一般格式为：
-````
+```
 asm ( assembler template 
         : output operands                  /* optional */
         : input operands                   /* optional */
         : list of clobbered registers      /* optional */
     );
-````
+```
 在上面的语句先将栈设置为自己设置好的`interrupt frame`的起始处，然后执行一个中断返回的例程，这个例程源码为：
-````
+```
 /* Interrupt exit.
 
    Restores the caller's registers, discards extra data on the
@@ -106,9 +106,9 @@ intr_exit:
     /* Return to caller. */
     iret
 .endfunc
-````
+```
 说明该例程的作用时，有必要给出interrupt frame的结构体声明：
-````
+```
 /* Interrupt stack frame. */
 struct intr_frame
 {
@@ -147,9 +147,9 @@ struct intr_frame
     void *esp;                  /* Saved stack pointer. */
     uint16_t ss, :16;           /* Data segment for esp. */
 };
-````
+```
 上面的`intr_exit()`例程就是进入到用户态，通过iret指令将esp指向申请的内核栈的栈顶，同时eip指向elf可指向文件的执行入口，我们可以通过objdump看到执行入口`_start`.
-````
+```
  08048709 <_start>:
  8048709:       83 ec 1c                sub    $0x1c,%esp
  804870c:       8b 44 24 24             mov    0x24(%esp),%eax
@@ -159,7 +159,7 @@ struct intr_frame
  804871b:       e8 80 f9 ff ff          call   80480a0 <main>
  8048720:       89 04 24                mov    %eax,(%esp)
  8048723:       e8 6d 1a 00 00          call   804a195 <exit>
-````
+```
 通过设置interrupt frame的eip字段为elf文件执行入口，esp字段为申请的用户stack的栈顶，通过一个中断范围，进入到用户态，执行用户程序。有一个问题忽略了，那就是`_start`函数在调用main函数，也就是用户编写的代码时，有一个传argc和argv这两个参数的过程，所以我们在进入执行入口前，应该先为main函数设置好参数，做好给main函数参数传递的工作。
 
 在用户态stack申请好后，就应该进行参数传递的准备工作，工作也就是将传递进来的参数压栈，然后将这些参数的地址压栈，最后将argv和argc以及return address依次压栈，最终的效果类似于以下：

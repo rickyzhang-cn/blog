@@ -18,7 +18,7 @@ Pintos在进入`main()`函数前，其实有一个basic page table，由loader�
 上图是Pintos的物理内存分布图，Pintos运行的物理内存大小只有4MB，前面1MB也就是`0x00000-0xfffff`之间是内核的运行时环境，包含了内核的运行时stack，代码段，数据段，bss等。后面的3MB的话，也是由Pintos内核来管理，这里由于物理内存很小，就不会存在Linux系统中说的高端内存的问题，如果物理内存很大的话，Pintos也会有高端内存的问题。
 
 Pintos中内存的管理比较简单，内核中将`0xffffff`以上，也就是1MB以上的内存以page页的方式管理，分为两个池，`kernel_pool`和`user_pool`。
-````
+```
 /* A memory pool. */
 struct pool
   {
@@ -47,9 +47,9 @@ palloc_init (size_t user_page_limit)
     init_pool (&user_pool, free_start + kernel_pages * PGSIZE,
             user_pages, "user pool");
 }
-````
+```
 这里是用bitmap来记录page的使用，`kernel_pool`有一个base字段，这个是为了在`palloc_get_multiple()`和`palloc_get_page()`返回的为kernel virtual address，也就是`physical address+PHYS_BASE(0xc0000000 3GB)`。
-````
+```
 /* Populates the base page directory and page table with the
    kernel virtual mapping, and then sets up the CPU to use the
    new page directory.  Points init_page_dir to the page
@@ -87,7 +87,7 @@ paging_init (void)
        of the Page Directory". */
     asm volatile ("movl %0, %%cr3" : : "r" (vtop (init_page_dir)));
 }
-````
+```
 上面是内核给自己建立的页目录和页表项，对所有的4M物理内存都进行了映射。Pintos中分为两级，page dir和page table，由于物理内存只有4MB，也就是1024个page，内核的page dir中只有一项record是有效的，其他均为0，一个页表正好可以记录1024个page，只会有1个页表。
 
 建立好这个页表后，在内核空间，CPU的MMU单元就会正确的通过kernel virtual address去找到正确的物理地址所在地方，并且对内核的代码段进行了写保护。
@@ -95,7 +95,7 @@ paging_init (void)
 对于内核，对整个4MB空间都建立好了MMU需要的页目录和页表。在内核中通过palloc获得内存页，就可以直接使用返回的kernel virtual address，不会产生任何缺页异常。在用户空间的话，显然就没有这么简单。
 
 在用户空间，每个User Program都会有自己的pagedir，并且这个pagedir开始初始化时，会将内核空间的pagedir的内容拷贝过来，这样每个User Program的pagedir都有内核空间的索引信息。如果我没有想错的话，应该是给内核来用，应该从用户空间进入内核空间，如果User Program的pagedir中有内核空间的信息，就不需要改变cr3中的值，而且内核也可以知道当前User Program私有的内存信息。让用户空间知道内核空间内存信息也没有任何不安全，因为内核空间的地址对于用户空间不可访问。
-````
+```
 /* Creates a new page directory that has mappings for kernel
    virtual addresses, but none for user virtual addresses.
    Returns the new page directory, or a null pointer if memory
@@ -108,9 +108,9 @@ pagedir_create (void)
         memcpy (pd, init_page_dir, PGSIZE);
     return pd;
 }
-````
+```
 User Program在还没有建立好用户空间的运行时环境时，pagedir只有内核空间的信息，在建立运行时环境时会动态添加页表项。建立运行时环境的load()例程中的load_segment()和setup_stack()都会导致添加页表项。
-````
+```
 /* Adds a mapping from user virtual address UPAGE to kernel
    virtual address KPAGE to the page table.
    If WRITABLE is true, the user process may modify the page;
@@ -130,13 +130,13 @@ install_page (void *upage, void *kpage, bool writable)
     return (pagedir_get_page (t->pagedir, upage) == NULL
             && pagedir_set_page (t->pagedir, upage, kpage, writable));
 }
-````
+```
 上面的`install_page()`例程中，upage是ELF文件中编译器产生的logical address，kpage是在内核空间通过palloc分配来的页的kernel virtual address。`install_page()`函数就是在User Program的pagedir中添加logical address到physical address的页表项，这个过程中page是通过palloc申请得到的，所以有一个kernel virtual address到physical address的转换过程。
 
 这里以一个例子来说明，这个例子是User Program将自己的代码段装载到内存中，同时在pagedir中添加内存映射信息，这个例子中的地址信息都是用gdb调试器获得。
 
 User Program在运行前需要建立运行时环境，代码段、数据段、bss段、栈都需要申请页，同时建立相关pagedir的索引，供CPU的MMU正确寻址。在Pintos中先装载进来的是代码段，以4KB page为单位载入，多余的部分清零。
-````
+```
 //这里用代码混合文字来说明，能说明问题就好
 t=thread_current();
 t->pagedir 0xc010e000
@@ -148,7 +148,7 @@ static bool install_page(
         void *kpage, //0xc0281000
         bool writable //false
         )
-````
+```
 在`install_page()`例程中upage是ELF文件中GCC编译产生的logical address，`0x08048000`也可以看说代码段的起始地址，而kpage是通过palloc在`user_pool`中申请到的page，kernel virtual address为`0xc0281000`，其对应physical地址为`0x281000`，writable为false，显然代码段不可写。
 
 `install_page()`调用了`pagedir_get_page()`和`pagedir_set_page()`

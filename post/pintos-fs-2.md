@@ -7,7 +7,7 @@ tags:: c, pintos, fs
 
 在ATA磁盘和文件系统均初始化完成后，Pintos就可以在磁盘上进行I/O操作了。
 ## `inode.c`
-````
+```
 /* In-memory inode. */
 struct inode 
 {
@@ -28,11 +28,11 @@ struct inode_disk
     unsigned magic;                     /* Magic number. */
     uint32_t unused[125];               /* Not used. */
 };
-````
+```
 其中inode是In-memory inode，`inode_disk`是On-disk inode。`inode_disk`这个结构体正好是一个sector 512bytes的大小，最终会写到磁盘上的，`inode_disk`上记录的是一个磁盘文件的sector起点start和文件长度length。
 
 Pintos的原始文件系统中只有根目录，没有多级目录。Root Directory也是一个`inode_disk`，Root Directory占用一个sector，里面存储的是文件的entry，记录文件`inode_disk`所在的sector，然后改sector记录的就是文件所在的sector起点start和占用的连续的sector个数length。
-````
+```
 /* Initializes an inode with LENGTH bytes of data and
  writes the new inode to sector SECTOR on the file system
  device.
@@ -62,9 +62,9 @@ off_t inode_read_at (struct inode *inode, void *buffer_, off_t size, off_t offse
  growth is not yet implemented.) */
 off_t inode_write_at (struct inode *inode, const void *buffer_, off_t size,off_t offset);
 这两个例程是file_read()和file_write()调用的读写例程，其中的offset值时文件的offset
-````
+```
 ## `file.c`
-````
+```
 /* An open file. */
 struct file 
 {
@@ -75,9 +75,9 @@ struct file
     int fd;
     struct list_elem open_file_elem;
 };
-````
+```
 file结构体构建在inode之上，添加了一些字段支持file的一些操作。
-````
+```
 /* Opens a file for the given INODE, of which it takes ownership,
  and returns the new file. Returns a null pointer if an
  allocation fails or if INODE is null. */
@@ -112,7 +112,7 @@ file_write (struct file *file, const void *buffer, off_t size)
     return bytes_written;
 }
 file的读写例程，系统调用中文件的读写就是调用这里的读写例程
-````
+```
 ## `filesys.c`
 一直觉得filesys.c这个文件中的例程比较杂乱，有系统初始化时调用的`filesys_init()`例程，也有被系统调用机制中调用的`filesys_create/open/remove`例程。
 

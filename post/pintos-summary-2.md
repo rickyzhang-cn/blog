@@ -29,7 +29,7 @@ tags:: c, pintos, thread, schedule
 复杂点的情况有两种，一种是当A wait B时，B在wait C，C可能还在wait D，也就是wait构成了一个chain，这种情况怎么处理，这就需要一个循环，对chain上的每个thread的优先级设置为A的优先级和本身优先级的较大值。另一种情况是当A拥有多个lock时，在释放其中一个lock时，其优先级的设置问题，这时应该其优先级为自身优先级，和wait在其他lock上的优先级的最大值。
 
 第一种情况的代码：
-````
+```
 void sema_down (struct semaphore *sema) 
 {
     enum intr_level old_level;
@@ -84,9 +84,9 @@ void thread_set_ready_priority(struct thread *t,int new_priority)
         ready_list_reorder();
     }
 }
-````
+```
 第二种情况的代码：
-````
+```
 void sema_up (struct semaphore *sema) 
 {
     enum intr_level old_level;
@@ -157,7 +157,7 @@ void thread_set_true_priority(struct thread *t)
     //list_sort(&ready_list,less_func,"p");
     ready_list_reorder();
 }
-````
+```
 这里的代码其实没有考虑到加入一个thread等待在多个lock上，也就是这个实现限制线程只能可以获得多个lock，却只能wait一个lock，这个下次可以改进。
 ## Tips
 1.关于同步的问题，Pintos中需要关中断保持一致性的全局资源是中断服务程序可能修改的资源，比如`ready_list`，在引入mlfq调度器后，时钟中断服务程序中需要计算`ready_list`中thread的优先级。其他中断服务程序不会修改的资源，可以使用lock或者sema保证一致性。

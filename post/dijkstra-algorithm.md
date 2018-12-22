@@ -10,22 +10,25 @@ Dijkstra算法解决的是带权重的有向图上单源最短路径问题，该
 Dijkstra算法解决的是单源最短路径问题，Bellman-Ford算法也可以解决，而且Bellman-Ford算法可以运行在有权重和为负值的环的图上，Dijkstra具有更快的运行效率。对于DAG，这种自带约束条件，我们有更简单的方法来解决这个问题，基于拓扑排序来解决。
 
 对于单源最短路径，最基本的操作是relaxation操作。代码很简单：
-<pre class="brush:plain">INITIALIZE-SINGLE-SOURCE(G, s)
+```
+INITIALIZE-SINGLE-SOURCE(G, s)
 	for each vertex v ∈ G.V
 		v.d=∞
 		v.π=NIL
 	s.d=0
 	
 RELAX(u,v,w)
-	if v.d &gt; u.d+w(u,v)
+	if v.d > u.d+w(u,v)
 		v.d=u.d+w(u,v)
-		v.π=u</pre>
+		v.π=u
+```
 属性v.d用来记录从源节点s到结点v的最短路径权重的上界。
 
 最短路径和松弛操作的性质提供了单源最短路径算法的证明。
 
 Dijkstra算法代码：
-<pre class="brush:plain">DIJKSTRA(G,w,s)
+```
+DIJKSTRA(G,w,s)
 	INITIALIZE_SINGLE-SOURCE(G,s)
 	S=∅
 	Q=G.V
@@ -33,7 +36,8 @@ Dijkstra算法代码：
 		u=EXTRACT-MIN(Q)
 		S=S∪{u}
 		for each vertex v∈G.Adj[u]
-			RELAX(u,v,w)</pre>
+			RELAX(u,v,w)
+```
 Dijkstra算法的代码执行过程很简单，但是很巧妙。最重要的就是要理解下面的循环不等式：
 
 在算法第4-8行的while语句的每次循环开始前，对于每个结点v∈S，有v.d=δ(s,v)。

@@ -16,7 +16,7 @@ tags:: c, pintos, thread
 在Pintos的源码包中的misc/目录中有一个安装带调试功能bochs的脚本bochs-2.2.6-build.sh，可以自己看一看，就用这个脚本进行安装就可以
 
 脚本中使用的bochs源码版本是2.2.6，你需要去下载一个2.2.6的bochs源码包。然后运行下面的命令：
-````
+```
 #下面这个包如果你的电脑上有就不需要安装
 sudo apt-get install gcc binutils perl make gdb qemu g++ libwxbase2.8-0 libwxgtk2.8-dev libwxgtk2.8-dbg libxmu-dev libxmuu-dev libncurses5-dev
 #安装bochs2.2.6
@@ -26,7 +26,7 @@ env SRCDIR=/path/to/bochs-2.2.6.tar.gz PINTOSDIR=/path/to/pintos DSTDIR=/usr/loc
 cd /path/to/root/of/pintos/src/utils
 sudo make
 sudo cp backtrace pintos pintos-gdb pintos-mkdisk Pintos.pm squish-pty /usr/local/bin
-````
+```
 
 还有一个就是需要修改pintos-gdb这个perl脚本中GDBMACROS变量为源码包util/目录中gdb-macros文件的位置。
 
