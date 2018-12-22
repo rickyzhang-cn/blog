@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"io/ioutil"
 	"net/http"
+	"sort"
 
 	"encoding/json"
 
@@ -64,6 +65,8 @@ func ParseIndex() gin.HandlerFunc {
 		for tag := range tagM {
 			tags = append(tags, tag)
 		}
+		sort.Strings(categories)
+		sort.Strings(tags)
 		c.Set(CATEGORIES, categories)
 		c.Set(TAGS, tags)
 		c.Next()
