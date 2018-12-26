@@ -1,6 +1,20 @@
 {
   "posts": [
     {
+      "file_name": "concurrency-paradigm.md",
+      "title": "\u5e76\u53d1\u6a21\u5f0f",
+      "date": "2018-12-26",
+      "categories": [
+        "\u7f16\u7a0b\u8bed\u8a00",
+        "\u7cfb\u7edf\u4e0e\u7f51\u7edc"
+      ],
+      "tags": [
+        "csp",
+        "actor",
+        "function programming"
+      ]
+    },
+    {
       "file_name": "go-http-tcp-hot-upgrade.md",
       "title": "golang http\u548ctcp\u7684\u70ed\u66f4\u65b0",
       "date": "2018-10-15",
