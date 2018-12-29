@@ -213,6 +213,7 @@ Actor最大的优势就是基于Erlang的OTP可以方便的分布式部署！
 
 #### 示例：分布式词频统计
 ![stat demo](../img/actor-distributed-stat-demo.png)
+
 这里有三类Actor：一个Parser、多个Counter和一个Accumulator，每个Actor都可部署在单独的机器上。
 
 解析器负责将一个WikiPedia dump文件解析为若干个页面，计数器负责统计单个页面的词频，累加器负责统计多个页面的词频总数。
